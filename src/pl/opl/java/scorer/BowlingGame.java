@@ -15,8 +15,8 @@ static int SECOND_ROLL =2;
 static int THIRD_ROLL =3;
 static int STRIKE_ROLLS_FRAME_BONUS =2 ; // bonuses from 2 next rolls in 1  or 2 next frames (if strike in next frame) 
 static int SPARE_ROLLS_FRAME_BONUS =1 ;
-Boolean createnewframe;
-Boolean lastround;
+boolean createnewframe;
+boolean lastround;
 int bonuses; //  bonuses counter (in strike =2; spare=1; nothing =0);
 int dscore; // the current round score; only sum points from the current round ( with bonuses)
 int pins_in_first_roll; // first roll in frame <0,..,10>

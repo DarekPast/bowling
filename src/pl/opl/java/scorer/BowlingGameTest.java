@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class BowlingGameTest extends BowlingGame {
 	
 private static Scanner input;
-static Boolean extra_rzut;
+static boolean extra_rzut;
 
 	public static void main(String[] args) throws IOException {
 		BowlingGameTest test = new BowlingGameTest();
@@ -17,7 +17,7 @@ static Boolean extra_rzut;
 		extra_rzut =false;
 		input = new Scanner(System.in);
 		
-		System.out.println("Program licz¹cy wynik gry w krêgle ("+MAXGAMES+" rund) ");
+		System.out.println("Program liczï¿½cy wynik gry w krï¿½gle ("+MAXGAMES+" rund) ");
 		
 		while(i <(MAXGAMES)) {
 		System.out.print("Podaj wynik w "+i+" kolejce: pierwszy rzut - ");
@@ -27,7 +27,7 @@ static Boolean extra_rzut;
 			}
 			catch(InputMismatchException e)
 			{
-				System.out.println("To nie liczba (koñczymy) :[");
+				System.out.println("To nie liczba (koï¿½czymy) :[");
 				return;
 			}
 			test.roll(rzut1);
@@ -39,11 +39,11 @@ static Boolean extra_rzut;
 			
 				try
 				{
-					rzut2  =  input.nextInt(); //dla typów Long, Float i Double wstaw w³aœciw¹ nazwê i typ
+					rzut2  =  input.nextInt(); //dla typï¿½w Long, Float i Double wstaw wï¿½aï¿½ciwï¿½ nazwï¿½ i typ
 				}
 				catch(InputMismatchException e)
 				{
-					System.out.println("To nie liczby (koñczymy) :[");
+					System.out.println("To nie liczby (koï¿½czymy) :[");
 					return;
 				}
 				if ((rzut1+rzut2) == FRAME_MAXSCOPE) {
@@ -61,7 +61,7 @@ if (i ==MAXGAMES) {
 		rzut1  =  input.nextInt(); 
 	}
 	catch(InputMismatchException e) {
-		System.out.println("To nie liczba (koñczymy) :[");
+		System.out.println("To nie liczba (koï¿½czymy) :[");
 		return;
 	}
 	test.roll(rzut1);
@@ -73,10 +73,10 @@ if (i ==MAXGAMES) {
 
 	System.out.print(" a teraz drugi rzut - ");
 	try{
-		rzut2  =  input.nextInt(); //dla typów Long, Float i Double wstaw w³aœciw¹ nazwê i typ
+		rzut2  =  input.nextInt(); //dla typï¿½w Long, Float i Double wstaw wï¿½aï¿½ciwï¿½ nazwï¿½ i typ
 	}
 	catch(InputMismatchException e){
-		System.out.println("To nie liczby (koñczymy) :[");
+		System.out.println("To nie liczby (koï¿½czymy) :[");
 		return;
 	}
 	test.roll(rzut2);
@@ -91,16 +91,16 @@ if (i ==MAXGAMES) {
 	if (extra_rzut) {
 		System.out.print(" EXTRA RZUT - ");
 		try{
-			rzut3  =  input.nextInt(); //dla typów Long, Float i Double wstaw w³aœciw¹ nazwê i typ
+			rzut3  =  input.nextInt(); //dla typï¿½w Long, Float i Double wstaw wï¿½aï¿½ciwï¿½ nazwï¿½ i typ
 		}
 		catch(InputMismatchException e){
-			System.out.println("To nie liczby (koñczymy) :[");
+			System.out.println("To nie liczby (koï¿½czymy) :[");
 			return;
 		}
 		test.roll(rzut3);
 	}
 	
-	System.out.print("\n Wynik koñcowy: "+test.calculateScore()+"\n");
+	System.out.print("\n Wynik koï¿½cowy: "+test.calculateScore()+"\n");
 	i++;
 	}
 		input.close();
@@ -108,7 +108,7 @@ if (i ==MAXGAMES) {
 
 	
 	public void wypisz(int a) {
-		System.out.println("Runda "+frame_nb+" rzut "+roll_nb+" str¹cono "+a+"; punkty = "+calculateScore());
+		System.out.println("Runda "+frame_nb+" rzut "+roll_nb+" strï¿½cono "+a+"; punkty = "+calculateScore());
 		
 	}
 	
