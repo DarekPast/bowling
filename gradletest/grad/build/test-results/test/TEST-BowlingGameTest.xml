@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="BowlingGameTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-02-08T19:19:49" hostname="Darek-Comp" time="0.005">
+  <properties/>
+  <testcase name="testBowlingGameMethod" classname="BowlingGameTest" time="0.005"/>
+  <system-out><![CDATA[Runda:2;rzut:0 Bonusy1 roundy Score=20
+Runda:2;rzut:2 Bonusy0 roundy Score=50
+Runda:3;rzut:0 Bonusy1 roundy Score=50
+Runda:3;rzut:2 Bonusy0 roundy Score=80
+Runda:4;rzut:0 Bonusy1 roundy Score=80
+Runda:4;rzut:2 Bonusy0 roundy Score=110
+Runda:5;rzut:0 Bonusy1 roundy Score=110
+Runda:5;rzut:2 Bonusy0 roundy Score=140
+Runda:6;rzut:0 Bonusy1 roundy Score=140
+Runda:6;rzut:2 Bonusy0 roundy Score=170
+Runda:7;rzut:0 Bonusy1 roundy Score=170
+Runda:7;rzut:2 Bonusy0 roundy Score=200
+Runda:8;rzut:0 Bonusy1 roundy Score=200
+Runda:8;rzut:2 Bonusy0 roundy Score=230
+Runda:9;rzut:0 Bonusy1 roundy Score=230
+Runda:9;rzut:2 Bonusy0 roundy Score=260
+Runda:10;rzut:0 Bonusy1 roundy Score=260
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
