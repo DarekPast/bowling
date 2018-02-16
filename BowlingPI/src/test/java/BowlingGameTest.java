@@ -5,10 +5,12 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import main.java.BowlingGame;
+import main.java.BowlingGame2;
+import main.java.BowlingGame3;
 
 
-public class BowlingGameTest extends BowlingGame {
-	static int MAXGAMES = 10;
+public class BowlingGameTest extends BowlingGame3 {
+	static int MAXGAMES = 4;
 	static int FRAME_MAXSCOPE = 10;
 	private static Scanner input;
 	static boolean extra_rzut;
@@ -37,7 +39,7 @@ BowlingGameTest() {
 			}
 			catch(InputMismatchException e)
 			{
-				System.out.println("To nie liczba (konczymy) :[");
+				System.out.println("To nie liczba rzutów (konczymy) :[");
 				return;
 			}
 			test.roll(rzut1);
@@ -64,8 +66,9 @@ BowlingGameTest() {
 			i++;
 			// System.out.print(rzut2);
 		}//while (i <(MAXGAMES)
-			
-if (i ==MAXGAMES) {
+	
+		System.out.print("\n Wynik przed ostatnia: "+test.calculateScore()+"\n");
+if (i ==MAXGAMES) {// last round
 	System.out.print("Podaj wynik w ostatniej kolejce: pierwszy rzut - ");
 	try {
 		rzut1  =  input.nextInt(); 
