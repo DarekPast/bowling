@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 
 
-public class BowlingGameTest {
+public class BowlingGameTest2 {
 	static int MAX = 21;
 	static int PERFECTGAME = 12;
-    BowlingGame bowlingUnderTest; // = new BowlingGame();
+    BowlingGame2 bowlingUnderTest; // = new BowlingGame();
 	int [] referenceData,dataFromBowlingGame;
 	
 		
@@ -26,7 +26,7 @@ public class BowlingGameTest {
 	
 	
 	@Test public void noBonusesTestAfterSomeRolls() {
-		bowlingUnderTest = new BowlingGame();
+		bowlingUnderTest = new BowlingGame2();
 		int noBonusPins=4; // less that 5
 		int someRolls=20;	//max 20 (without extra roll)
 		
@@ -42,7 +42,7 @@ public class BowlingGameTest {
 	
 	@Test public void perfectGameScores300() {
 		// Perfect Game 12 x STRIKE
-    	bowlingUnderTest = new BowlingGame();
+    	bowlingUnderTest = new BowlingGame2();
     	int [] patternData = new int[PERFECTGAME];
     	int somePerfectRolls=PERFECTGAME; //change it if error
     	
@@ -75,7 +75,7 @@ public class BowlingGameTest {
 	}
 	
 	@Test public void perfectGameSpare190() {
-		bowlingUnderTest = new BowlingGame();
+		bowlingUnderTest = new BowlingGame2();
     	int [] patternData = new int[MAX];
     	int somePerfectSpares=MAX; // change it if error
     	//the pattern of MAX SPARE bowling game
@@ -123,7 +123,7 @@ public class BowlingGameTest {
 	
 	@Test public void strikeHasBonusPointsFromNextTwoRolls() {
 		// INFO: Zeros in frame except STRIKE in "oneStrike" roll and 2 next "noBonusPins" rolls
-		bowlingUnderTest = new BowlingGame();
+		bowlingUnderTest = new BowlingGame2();
 		int oneStrike=4; // only even numbers and less that 19
 		int noBonusPins=1; // less that 5
 		int i=0;
@@ -168,7 +168,7 @@ public class BowlingGameTest {
 	
 	@Test public void spareHasBonusPointsFromNextRoll() {
 		// INFO: Zeros in frame except SPARE in "oneSpare" roll and 2 next "noBonusPins" rolls
-		bowlingUnderTest = new BowlingGame();
+		bowlingUnderTest = new BowlingGame2();
 		int oneSpare=4; // roll when will be STRIKE. Only even numbers and less that 19
 		int noBonusPins=1; // less that 5
 		int i=0;

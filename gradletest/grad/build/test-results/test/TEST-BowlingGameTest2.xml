@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="BowlingGameTest2" tests="5" skipped="0" failures="0" errors="0" timestamp="2018-02-18T06:52:05" hostname="Darek-Comp" time="0.002">
+  <properties/>
+  <testcase name="noBonusesTestAfterSomeRolls" classname="BowlingGameTest2" time="0.001"/>
+  <testcase name="perfectGameSpare190" classname="BowlingGameTest2" time="0.0"/>
+  <testcase name="spareHasBonusPointsFromNextRoll" classname="BowlingGameTest2" time="0.0"/>
+  <testcase name="perfectGameScores300" classname="BowlingGameTest2" time="0.0"/>
+  <testcase name="strikeHasBonusPointsFromNextTwoRolls" classname="BowlingGameTest2" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
