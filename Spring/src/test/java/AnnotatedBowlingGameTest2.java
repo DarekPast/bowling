@@ -1,41 +1,29 @@
 package test.java;
+//2018.02.27
 
-//2018.02.23
 import static org.junit.Assert.*;
-//import main.java.*;
-import main.java.AnnotatedBowlingGame2;
+import main.java.*;
 import org.junit.Before;
 import org.junit.Test;
-//not in Eclipse Platform (Linux/Ubuntu); Test with Gradle
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class AnnotatedBowlingGameTest2 {
 	static int MAX = 21;
 	static int PERFECTGAME = 12;
-//	private ApplicationContext context; 
-	private ClassPathXmlApplicationContext context;
-	//not in Eclipse Platform (Linux/Ubuntu) Test with Gradle
-
-	private AnnotatedBowlingGame2 bowlingUnderTest; 
-	//private BowlingGame2 bowlingUnderTest2; 
-	
+	private ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("annotatedcontext.xml");
+	//context = new ClassPathXmlApplicationContext("annotatedcontext.xml");	
+	//private Bowling bowlingUnderTest = context.getBean(AnnotatedBowlingGame2.class); //correct
+	private Bowling bowlingUnderTest= (Bowling) context.getBean("BowlingService"); //correct
+	//private Bowling bowlingUnderTest = context.getBean("BowlingService"); //wrong	
 	int [] referenceData,dataFromBowlingGame;
 	
 		
 	
 	@Before public void initializeBowlingGameTests() {
-		// 
-
-		context = new ClassPathXmlApplicationContext("annotatedcontext.xml");	
-		bowlingUnderTest = context.getBean(AnnotatedBowlingGame2.class);
-		//bowlingUnderTest2 = context.getBean(BowlingGame2.class);
-
-		
-		referenceData = new int[MAX];;
+	referenceData = new int[MAX];;
   	dataFromBowlingGame = new int[MAX];	
   	for (int i=0;i<(MAX);i++){
   		referenceData[i]=0;

@@ -1,6 +1,8 @@
 package main.java;
-//2018.02.17
-public class BowlingGame2 {
+import org.springframework.stereotype.Service;
+
+@Service ("bowlingTest")
+public class BowlingGame2 implements Bowling{
 	private static int MAXFRAME = 11; // MAX count of frame/round + we start from "1" in table
 	private static int MAXROLLS = 24; // 2*MAXFRAME+EKSTRA ROLL + we start from "1" in table
 	private static int ROLL_MAXSCOPE = 10;

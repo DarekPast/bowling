@@ -1,10 +1,10 @@
 package main.java;
 //2018.02.23
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service ("bowlingUnderTest")
-public class AnnotatedBowlingGame2 {
+@Service("BowlingService")
+public class AnnotatedBowlingGame2 implements Bowling {
 	private static int MAXFRAME = 11; // MAX count of frame/round + we start from "1" in table
 	private static int MAXROLLS = 24; // 2*MAXFRAME+EKSTRA ROLL + we start from "1" in table
 	private static int ROLL_MAXSCOPE = 10;

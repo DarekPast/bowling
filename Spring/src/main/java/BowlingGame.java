@@ -1,7 +1,10 @@
 package main.java;
 //2018.02.22
+//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class BowlingGame {
+@Service ("InnyTest")
+public class BowlingGame implements Bowling{
 static int MAXGAMES = 10; // 10+1 - because table is used from 1 not from 0 
 static int FRAME_MAXSCOPE = 10;
 static int ROLL_MAXSCOPE = 10;
