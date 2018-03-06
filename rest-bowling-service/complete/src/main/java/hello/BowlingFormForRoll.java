@@ -9,11 +9,11 @@ import javax.validation.constraints.NotNull;
 
 //@Entity
 //@Table(name = "BowlingFormGETForRoll")
-@Component("BowlingFormForRoll") 
+@Component("bowlingFormForRoll") 
 public class BowlingFormForRoll{
 	@NotNull
 	@Size(min=1,max=21) // 21 - Max rolls in frame 	
-    private long playerId;
+    private int playerId;
 	@NotNull
 	@Size(min=0,max=10)	
 	private int pins;

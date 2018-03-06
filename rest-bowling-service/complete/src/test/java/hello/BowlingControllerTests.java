@@ -18,6 +18,7 @@ package hello;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +35,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
 import hello.*;
 
 @RunWith(SpringRunner.class)
@@ -45,11 +47,16 @@ public class BowlingControllerTests {
 	@Autowired
     private MockMvc mockMvc;
 
-    @Test
-    public void addNewGame() throws Exception {
+	@Before
+//	@Test
+    public void testAddNewGame() throws Exception {
 		// first game creation
-        this.mockMvc.perform(post("/bowling/games/add")).andDo(print()).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("NoName"));
+        this.mockMvc.perform(post("/bowling/games/add"))
+			.andDo(print())
+			.andExpect(status().isCreated())
+            .andExpect(jsonPath("$.name").value("NoName"))
+			.andExpect(jsonPath("$.playerId").value(1))
+			.andExpect(jsonPath("$.score").value(0));
 		// second game creation
         this.mockMvc.perform(post("/bowling/games/add?name=Darek")).andDo(print()).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Darek"));
@@ -58,36 +65,80 @@ public class BowlingControllerTests {
                 .andExpect(jsonPath("$.name").value("Jarek"));  
 
     }
-	@Test
-    public void getGameInfo() throws Exception {
+
+//	@Test
+    public void testGetGameInfo() throws Exception {
 
 		// get name from first game
-       this.mockMvc.perform(get("/bowling/games/1")).andDo(print()).andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("NoName"));
+       this.mockMvc.perform(get("/bowling/games/1"))
+			.andDo(print())
+			.andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("NoName"))
+			.andExpect(jsonPath("$.playerId").value(1))
+			.andExpect(jsonPath("$.score").value(0));
+
 		// get name from second game
-       this.mockMvc.perform(get("/bowling/games/2")).andDo(print()).andExpect(status().isOk())
+       this.mockMvc.perform(get("/bowling/games/{id}",2)).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Darek"));
 		// 	// get name from third game
-       this.mockMvc.perform(get("/bowling/games/3")).andDo(print()).andExpect(status().isOk())
+       this.mockMvc.perform(get("/bowling/games/{id}",3)).andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Jarek"));
     }
 
 
 
-//   @Test
-//    public void addPinsToGame() throws Exception {
-//        this.mockMvc.perform(put("/bowling/games/1").body("pins","3")).andDo(print()).andExpect(status().isOk())
-//                .andExpect(jsonPath("$.score").value("3"));
-//        this.mockMvc.perform(get("/bowling/games/1")
-//				.contentType(MediaType.APPLICATION_JSON)
- //               .content(asJsonString("pins","4")))
-//				.andDo(print()).andExpect(status().isOk())
- //               .andExpect(jsonPath("$.name").value("NoName")); 
-//       this.mockMvc.perform(put("/bowling/games/1").body("pins","3")).andDo(print()).andExpect(status().isOk())
-//                .andExpect(jsonPath("$.score").value("6"));
-//   
-//}
+   //@Test // Adding pins to the game
+    public void testAddPinsToGame() throws Exception {
+        this.mockMvc.perform(put("/bowling/games/1")
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(createDataInJson (1,3))) // end perform()
+			.andDo(print())
+			.andExpect(status().is(202)) //202 - game contius OR .isOk()??
+            .andExpect(jsonPath("$.name").value("NoName"))//;
+			.andExpect(jsonPath("$.playerId").value(1))
+			.andExpect(jsonPath("$.score").value(3));
+
+      	this.mockMvc.perform(put("/bowling/games/1")
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(createDataInJson (1,7))) // end perform()
+			.andDo(print())
+			.andExpect(status().is(202)) //.isOk()??
+            .andExpect(jsonPath("$.name").value("NoName"))//;
+			.andExpect(jsonPath("$.playerId").value(1))
+			.andExpect(jsonPath("$.score").value(10));
+
+   		this.mockMvc.perform(put("/bowling/games/1")
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(createDataInJson (1,7))) // end perform()
+			.andDo(print())
+			.andExpect(status().is(202)) //.isOk()??
+            .andExpect(jsonPath("$.name").value("NoName"))//;
+			.andExpect(jsonPath("$.playerId").value(1))
+			.andExpect(jsonPath("$.score").value(24));
+	}
+
+	@Test // Delete games
+		public void testDeleteGame() throws Exception {
+
+		// get name from first game
+       this.mockMvc.perform(delete("/bowling/games/delete/1"))
+			.andDo(print())
+			.andExpect(status().isOk());
+
+    	}
 
 
+
+private static String createDataInJson (int playerId, int pins ) {
+        return "{ \"playerId\": \"" + playerId + "\", " +
+                            "\"pins\":\"" + pins + "\" }";
+    }
+
+/*private static String createDataInJson (String name, String playerId, String pins) {
+        return "{ \"name\": \"" + name + "\", " +
+                            "\"playerId\":\"" + playerId + "\"," +
+                            "\"pins\":\"" + pins + "\"}";
+    }
+*/
 
 }

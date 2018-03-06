@@ -3,7 +3,6 @@ package hello;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-// added 2018.03.01
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -73,14 +72,14 @@ public class BowlingController {
 
   
     @ApiOperation(value = "Delete a Game")
-    @RequestMapping(value="/games/delete/{id}", method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity delete(@PathVariable int id){
-		gameBase[id]= null;//new BowlingService(id,"deleted");
+    @RequestMapping(value="/games/delete/{id}", method = RequestMethod.DELETE)// produces = "application/json")
+    public ResponseEntity delete(@PathVariable("id") int id){
+		gameBase[id]= null;// or new BowlingService(id,"deleted");
 
 		HttpHeaders head = new HttpHeaders();
-		head.set("HttpHeaderResponse","Game nr."+id+" deleted");
+		head.set("HttpHeaderResponse","Game deleted");
 		return new ResponseEntity(head, HttpStatus.OK);
- 
+//		return new ResponseEntity<BowlingService>(head, HttpStatus.OK); 
     }
 
 }
