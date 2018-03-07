@@ -230,6 +230,16 @@ static int MAX = 21;
   	assertArrayEquals("spareHasBonusPointsFromNextRoll()",referenceData, dataFromBowlingGame); 	
 	
   } // public void spareHasBonusPointsFromNextRoll()
-
-
+	
+	//@Test 
+	public void erroorInValidation() {
+	//test generate my error 
+		int noBonusPins=6; // less that 5
+		int someRolls=20;	//max 20 (without extra roll)
+		
+  		for (int i=0;i<someRolls;i++){
+  			bowlingUnderTest.roll(noBonusPins);
+  			dataFromBowlingGame[i]=bowlingUnderTest.calculateScore();
+  		}
+	}
 }

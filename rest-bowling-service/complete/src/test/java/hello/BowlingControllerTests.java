@@ -47,8 +47,8 @@ public class BowlingControllerTests {
 	@Autowired
     private MockMvc mockMvc;
 
-	@Before
-//	@Test
+//	@Before
+	@Test
     public void testAddNewGame() throws Exception {
 		// first game creation
         this.mockMvc.perform(post("/bowling/games/add"))
@@ -66,7 +66,7 @@ public class BowlingControllerTests {
 
     }
 
-//	@Test
+	@Test
     public void testGetGameInfo() throws Exception {
 
 		// get name from first game
@@ -87,13 +87,13 @@ public class BowlingControllerTests {
 
 
 
-   //@Test // Adding pins to the game
+   @Test // Adding pins to the game
     public void testAddPinsToGame() throws Exception {
         this.mockMvc.perform(put("/bowling/games/1")
 				.contentType(MediaType.APPLICATION_JSON) //
 				.content(createDataInJson (1,3))) // end perform()
 			.andDo(print())
-			.andExpect(status().is(202)) //202 - game contius OR .isOk()??
+			.andExpect(status().isAccepted()) //202 - game contius OR .isOk()??
             .andExpect(jsonPath("$.name").value("NoName"))//;
 			.andExpect(jsonPath("$.playerId").value(1))
 			.andExpect(jsonPath("$.score").value(3));
@@ -116,6 +116,32 @@ public class BowlingControllerTests {
 			.andExpect(jsonPath("$.playerId").value(1))
 			.andExpect(jsonPath("$.score").value(24));
 	}
+@Test // Adding pins to the game
+    public void testAddPinsToGameErrors() throws Exception {
+		// Id in Patch != Id in body
+        this.mockMvc.perform(put("/bowling/games/2")
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(createDataInJson (1,3))) 
+			.andDo(print())
+			.andExpect(status().is(300));
+		// ID out of scope
+      	this.mockMvc.perform(put("/bowling/games/10")
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(createDataInJson (10,7))) // end perform()
+			.andDo(print())
+			.andExpect(status().is(406)); //.isOk()??
+
+/*
+   		this.mockMvc.perform(put("/bowling/games/1")
+				.contentType(MediaType.APPLICATION_JSON) //
+				.content(createDataInJson (1,7))) // end perform()
+			.andDo(print())
+			.andExpect(status().is(202)) //.isOk()??
+            .andExpect(jsonPath("$.name").value("NoName"))//;
+			.andExpect(jsonPath("$.playerId").value(1))
+			.andExpect(jsonPath("$.score").value(24));
+*/
+	}
 
 	@Test // Delete games
 		public void testDeleteGame() throws Exception {
@@ -133,12 +159,5 @@ private static String createDataInJson (int playerId, int pins ) {
         return "{ \"playerId\": \"" + playerId + "\", " +
                             "\"pins\":\"" + pins + "\" }";
     }
-
-/*private static String createDataInJson (String name, String playerId, String pins) {
-        return "{ \"name\": \"" + name + "\", " +
-                            "\"playerId\":\"" + playerId + "\"," +
-                            "\"pins\":\"" + pins + "\"}";
-    }
-*/
 
 }

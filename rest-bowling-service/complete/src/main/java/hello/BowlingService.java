@@ -5,85 +5,112 @@ import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import hello.BowlingGame;
-//import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
 //import io.swagger.annotations.ApiModelProperty;
 //import javax.persistence.*;
+import hello.BowlingGame;
 
 
-//@Service("bowlingService") 
+//@Entity
+@Service("games") 
 //@Component("bowlingService") 
 public class BowlingService {
+	//"The website sport up to MAX_GAME_BAS parallel games"	
+	static int MAX_GAME_BASE = 10;	
 	static int ROLL_MAXSCOPE = 10;
 	static int MAX_ROLL_IN_GAME = 22; // Max roll in game is 21 but table is started from 1 not from 0;
-	private int playerId;  // id Game or long
-	private String name;
-	private int idRoll;
-	private int score;
-	//@Autowired	//??
-	private BowlingGame bowlingGame;
-	private int roll[];
+	static int OUT_OF_RANGE =-1;
+	static int NOT_ERROR =0;
 
+    private int gameCounter;  // int or long?playerId,
+    //The taable of name players"
+	private String names[] = new String[MAX_GAME_BASE];
+	//"The base of all games"
+	private BowlingGame gameBase[] = new BowlingGame[MAX_GAME_BASE];
+
+	//
 	public BowlingService() {
-        playerId =0;
-		score=0;
-		name = "Error: BowlingG basic constructor";
-		score= 0;
-		roll = new int[MAX_ROLL_IN_GAME];
-		idRoll = 0; 
-		//@Autowired		
-		bowlingGame = new BowlingGame();
+       	gameCounter =0;
+		names[0] = "No any Name";
+		gameBase[0] = null;//new BowlingGame();
 		
     }
     
 	public BowlingService(int playerId, String name) {
-		this.playerId = playerId;
-		this.name = name;
-		score = 0;
-		roll = new int[MAX_ROLL_IN_GAME];
-		idRoll = 0;
-//		@Autowired
-		bowlingGame = new BowlingGame();
+		//this.super();
+ 		this.names[playerId] = name;
+
     }
 
    
-	public long getPlayerId() {
-        return playerId;
+	public int getGameCounter() {
+        return gameCounter;
     }
 
-    public String getName() {
-        return name;
+    public String getName(int id) {
+        return names[id];
     }
-	public int getIdRoll(){
-		return idRoll;
-	}	
 		
-	public int getScore(){
-		return score;
+	public int getScore(int playerId){
+    	return gameBase[playerId].calculateScore();
 	}	
-	public BowlingGame getBowlingGame(){
-		return bowlingGame;
+	public BowlingGame[] getBowlingGame(){
+    	return gameBase;
 	}	
+//	public BowlingGame getBowlingGame(int playerId){
+//    	return gameBase[playerId];
+//	}
 
-	public void setId(int playerId) {
- 		this.playerId=playerId;       
-	}
-
-	public void addPins(BowlingFormForRoll pins) {
-		roll[idRoll+1]+=pins.getPins();
-		bowlingGame.roll(pins.getPins());
-		score=bowlingGame.calculateScore();
-		idRoll++;        
-	}
-	public void addPinsint(int pins) {
-		roll[idRoll+1]+=pins;
-		bowlingGame.roll(pins);
-		score=bowlingGame.calculateScore();
-		idRoll++; 
+	public void addPins(BowlingInputForm bowlingInputData) {
+		gameBase[bowlingInputData.getPlayerId()].roll(bowlingInputData.getPins());		
 	}
 
-	public void setName(String name) {
-		this.name=name;       
+	public int addNewGame(String name) {
+		//validation
+		if((gameCounter+1)>MAX_GAME_BASE){
+			return OUT_OF_RANGE;	
+		}
+		//action
+		gameBase[gameCounter+1]=new BowlingGame();
+		names[gameCounter+1] = name;		
+		gameCounter++; // counter is increased only in this place 
+		return gameCounter;        
 	}
+	
+	public int delete(int playerId) {
+	// ??? Exceptions?
+		if ((playerId<=gameCounter)&&(playerId > 0)){
+			gameBase[playerId]=null;
+			return NOT_ERROR; //       
+		}
+		else{
+			return OUT_OF_RANGE;//Error
+		}
+	}
+
+	public BowlingOutputForm getBowlingOutputFormData(int playerId){
+		BowlingOutputForm bowlingOutputData= new BowlingOutputForm();
+		bowlingOutputData.setPlayerId(playerId);
+		bowlingOutputData.setName(names[playerId]);
+		bowlingOutputData.setAddedPins(0); //not sawed in GameSerwice
+		bowlingOutputData.setScore(gameBase[playerId].calculateScore());
+		bowlingOutputData.setRollNb(gameBase[playerId].getRollNb());
+		bowlingOutputData.setFrameNb(gameBase[playerId].getFrameNb()); 
+		bowlingOutputData.setRollInFrame(gameBase[playerId].getRollInFrame()); 
+		bowlingOutputData.setComments(gameBase[playerId].getComments()); 	
+		return bowlingOutputData;	
+	}
+	public BowlingOutputForm getBowlingOutputFormData(BowlingInputForm input){
+		BowlingOutputForm bowlingOutputData= getBowlingOutputFormData(input.getPlayerId());
+		bowlingOutputData.setAddedPins(input.getPins());
+		return bowlingOutputData;	
+	}
+	public boolean isOkPrevalidation(BowlingInputForm inputRest){
+		return gameBase[inputRest.getPlayerId()].isOkPrevalidation(inputRest.getPlayerId());
+
+	}
+
+
+
 
 }

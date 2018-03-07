@@ -1,8 +1,10 @@
 package hello;
 
+//import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+// added 2018.03.01
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -20,66 +22,106 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/bowling")
+@Api(value="onlinebowlinggame", description="Operations Bowling Games")
 public class BowlingController {
-	static int MAX_GAME_BASE=10;
-	private int gameCounter=0;
-	//	The base of all games
-	private BowlingService gameBase[] = new BowlingService[MAX_GAME_BASE];
+	static int OUT_OF_RANGE =-1;
+	@Autowired
+	private BowlingService bowlingService;// = new BowlingService();
+
   
- 	@ApiOperation(value = "Add new Game")
+ 	@ApiOperation(value = "Add new Game",response = BowlingOutputForm.class)
 	@RequestMapping(value="/games/add", method=RequestMethod.POST, produces = "application/json")
 	public ResponseEntity newPlayer(@RequestParam(value="name", defaultValue= "NoName") String name) {
-		gameCounter++;
-		gameBase[gameCounter]=new BowlingService(gameCounter,name);
-		HttpHeaders head = new HttpHeaders();
-		head.set("HttpHeaderResponse","New player game added");
-		return new ResponseEntity<BowlingService>(gameBase[gameCounter],head, HttpStatus.CREATED);	
+		//place for validation		
+		// place for action
+		int playerId= bowlingService.addNewGame(name);
+		//place for validation after action
+		if (playerId==OUT_OF_RANGE) { // Out of range
+			return new ResponseEntity(HttpStatus.FORBIDDEN); // HttpStatus.40x - No Id in base
+		}
+		// collect the output data		
+		BowlingOutputForm bowlingOutputData= bowlingService.getBowlingOutputFormData(playerId);
+		bowlingOutputData.setComments("New player game added");
+		return new ResponseEntity<BowlingOutputForm>(bowlingOutputData,HttpStatus.CREATED);//CREATED?
+}
 
-	}
 
-
-	@ApiOperation(value = "Info about bowling game with an ID",response = BowlingService.class)
+	@ApiOperation(value = "Info about bowling game with an ID",response = BowlingOutputForm.class)
 	@RequestMapping(value="/games/{id}", method=RequestMethod.GET, produces = "application/json")
-	public ResponseEntity getPlayer(@PathVariable("id") int id) {
-		HttpHeaders head = new HttpHeaders();
-		head.set("HttpHeaderResponse","Player Game info - ID in patch request");
-		return new ResponseEntity<BowlingService>(gameBase[id],head, HttpStatus.OK);		
+	public ResponseEntity getPlayerInfo(@PathVariable(value="id") int playerId){//, BindingResult result) {
+		//place for validation	
+		//if (result.hasErrors()) { 
+		//	return new ResponseEntity(HttpStatus.BAD_REQUEST); 
+		//}
+		if ((playerId > bowlingService.getGameCounter())||(playerId <=0)) { // ??? or BowlingService validation
+			return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE); // HttpStatus.40x - No Id in base
+		}
+		//place for action
+		////place for validation after action	
+		// collect the output data
+		BowlingOutputForm bowlingOutputData= bowlingService.getBowlingOutputFormData(playerId);
+		bowlingOutputData.setComments("Player Game info - ID in patch request");
+		return new ResponseEntity<BowlingOutputForm>(bowlingOutputData, HttpStatus.OK);
 	}
 
- 	@ApiOperation(value = "Add the pins to the game")
-	@RequestMapping(value="/games/{id}", method=RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity addPins1(	@PathVariable("id") int id, 
-//								@RequestBody @Valid BowlingFormForRoll dane, BindingResult result) { 
-								@RequestBody BowlingFormForRoll bowlingDateForRoll, BindingResult result) { 
-								
-		if (result.hasErrors()) { 
 
+ 	@ApiOperation(value = "Add the pins to the game with Id on the path",response = BowlingOutputForm.class)
+	@RequestMapping(value="/games/{id}", method=RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity addPinsWithIdOnPatch(	@PathVariable("id") int playerId, 
+							@RequestBody BowlingInputForm bowlingInputData){//, BindingResult result) { 
+		//place for validation							
+		//if (result.hasErrors()) { 
+
+		//	return new ResponseEntity(HttpStatus.BAD_REQUEST); 
+		//}
+		if (playerId != bowlingInputData.getPlayerId()) { 
+			return new ResponseEntity(HttpStatus.MULTIPLE_CHOICES); // HttpStatus.300 - conflict Id from path != Id from body 
+		}
+		if ((playerId > bowlingService.getGameCounter())||(playerId <=0)) { 
+			return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE); // HttpStatus.40x - No Id in base
+		}
+		//place for action
+		if(bowlingService.isOkPrevalidation(bowlingInputData)){ // pins value 
+			bowlingService.addPins(bowlingInputData); //add pins to game
+		}
+		else{
+			return new ResponseEntity(HttpStatus.FORBIDDEN); // wrong pins value
+		} 	
+		// place for validation after action		
+		// collect the output data	
+
+		BowlingOutputForm bowlingOutputData= bowlingService.getBowlingOutputFormData(bowlingInputData);
+		bowlingOutputData.setComments("Roll pins added");
+		return new ResponseEntity<BowlingOutputForm>(bowlingOutputData, HttpStatus.ACCEPTED); // http.Status  HttpStatus.CREATED???	
+	}
+
+
+    @ApiOperation(value = "Delete a Game")
+    @RequestMapping(value="/games/delete/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity delete(@PathVariable (value="id") int playerId){// BindingResult result) {
+		//place for validation	
+/*		if (result.hasErrors()) { 
 			return new ResponseEntity(HttpStatus.BAD_REQUEST); 
 		}
-//		if (gameBase[id].getPlayerId()!=dane.getPlayerId()) { 
-//			return new ResponseEntity(HttpStatus.MULTIPLE_CHOICES); // 300 - Id conflict
-//		}
-		gameBase[id].addPins(bowlingDateForRoll); 
+*/		
+		if (playerId > bowlingService.getGameCounter()) { 
+			return new ResponseEntity(HttpStatus.NOT_FOUND); // HttpStatus.40x - No Id in base
+		}
+		//place for action		
+		int whatHappend = bowlingService.delete(playerId);
+		////place for validation after action
+		if (whatHappend == OUT_OF_RANGE) { 
+			return new ResponseEntity(HttpStatus.NOT_FOUND); // HttpStatus.40x - No Id in base
+		}
 
-		HttpHeaders head = new HttpHeaders();
-		head.set("HttpHeaderResponse","Roll pins added.");
-		return new ResponseEntity<BowlingService>(gameBase[id],head, HttpStatus.ACCEPTED);	
+		// collect the output data		
 
-	}	
-
-  
-    @ApiOperation(value = "Delete a Game")
-    @RequestMapping(value="/games/delete/{id}", method = RequestMethod.DELETE)// produces = "application/json")
-    public ResponseEntity delete(@PathVariable("id") int id){
-		gameBase[id]= null;// or new BowlingService(id,"deleted");
-
-		HttpHeaders head = new HttpHeaders();
-		head.set("HttpHeaderResponse","Game deleted");
-		return new ResponseEntity(head, HttpStatus.OK);
-//		return new ResponseEntity<BowlingService>(head, HttpStatus.OK); 
+		return new ResponseEntity(HttpStatus.OK);
     }
+
 
 }
