@@ -58,7 +58,7 @@ public class BowlingController {
 		//	return new ResponseEntity(HttpStatus.BAD_REQUEST); 
 		//}
 		if ((playerId > bowlingService.getGameCounter())||(playerId <=0)) { // ??? or BowlingService validation
-			return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE); // HttpStatus.40x - No Id in base
+			return new ResponseEntity(HttpStatus.NOT_FOUND); // or NOT_ACCEPTABLE HttpStatus.40x - No Id in base
 		}
 		//place for action
 		////place for validation after action	
@@ -82,7 +82,7 @@ public class BowlingController {
 			return new ResponseEntity(HttpStatus.MULTIPLE_CHOICES); // HttpStatus.300 - conflict Id from path != Id from body 
 		}
 		if ((playerId > bowlingService.getGameCounter())||(playerId <=0)) { 
-			return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE); // HttpStatus.40x - No Id in base
+			return new ResponseEntity(HttpStatus.NOT_FOUND); // HttpStatus.40x - No Id in base
 		}
 		//place for action
 		if(bowlingService.isOkPrevalidation(bowlingInputData)){ // pins value 
@@ -109,13 +109,13 @@ public class BowlingController {
 		}
 */		
 		if (playerId > bowlingService.getGameCounter()) { 
-			return new ResponseEntity(HttpStatus.NOT_FOUND); // HttpStatus.40x - No Id in base
+			return new ResponseEntity(HttpStatus.FORBIDDEN); // HttpStatus.40x - No Id in base
 		}
 		//place for action		
 		int whatHappend = bowlingService.delete(playerId);
 		////place for validation after action
 		if (whatHappend == OUT_OF_RANGE) { 
-			return new ResponseEntity(HttpStatus.NOT_FOUND); // HttpStatus.40x - No Id in base
+			return new ResponseEntity(HttpStatus.FORBIDDEN); // NOT_FOUND
 		}
 
 		// collect the output data		

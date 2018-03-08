@@ -61,19 +61,23 @@ public class BowlingGame implements Bowling {
 
 	private void frameNbControl() {
 		//System.out.print("1. Frame="+FrameNb+"; rollInFrame="+rollInFrame);
-		if ((FrameNb)!=MAXFRAME){
+		if ((FrameNb)!=MAXFRAME-1){ //if ((FrameNb)!=MAXFRAME){
 			if (rollInFrame==THIRD_ROLL){ // only 2 rolls in frame. When is third roll => next frame/round. Except extra roll in last frame (FrameNb==MAXFRAME)
 				FrameNb++;      // new frame/round
-				rollInFrame=1; // in new frame it is first roll;
+				rollInFrame=FIRST_ROLL; // in new frame it is first roll;
 			}
 		}
 		if ((rolls[rollNb][PINS]==ROLL_MAXSCOPE)&&(rolls[rollNb-1][BONUS]==STRIKE)){ // STRIKE in previous roll
-			if (((FrameNb)<MAXFRAME)){ // when last frame/round => not new frame
+			if (((FrameNb)<(MAXFRAME-1))){ // MAXFRAME==11?
+
+				//if((FrameNb+1)<11){
 				FrameNb++;
-				rollInFrame=FIRST_ROLL;			
+				rollInFrame=FIRST_ROLL;	
+				//} //?????
+		
 			}
-			if ((FrameNb==MAXFRAME)&&(rollInFrame==FIRST_ROLL)){ // when last frame/round => not new frame
-				rollInFrame=SECOND_ROLL;			
+			if ((FrameNb==(MAXFRAME-1))&&(rollInFrame==FIRST_ROLL)){ // when last frame/round => not new frame
+			//	rollInFrame=SECOND_ROLL;			
 			}
 		}
 	}// frameNbControl(int pins)
@@ -89,13 +93,42 @@ public class BowlingGame implements Bowling {
 		}
 	}
 	private void addPins() {
-		rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
-		if ((FrameNb)<MAXFRAME) {
-
+//		rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+		
+		if ((FrameNb)<(MAXFRAME-1)) {
+			rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
 			rolls[rollNb][SCORE]+=rolls[rollNb][PINS];
+		}
+		if ((FrameNb)==(MAXFRAME-1)) {
+
+			if (rollInFrame == FIRST_ROLL){
+				rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+				rolls[rollNb][SCORE]+=rolls[rollNb][PINS];
+			}
+			if ((rolls[(rollNb-1)][BONUS]!=STRIKE)&&(rolls[(rollNb-1)][BONUS]!=SPARE)){
+				rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+				rolls[rollNb][SCORE]+=rolls[rollNb][PINS];
 			}
 
-		
+			if ((rollInFrame == SECOND_ROLL)&&(rolls[(rollNb-1)][BONUS]==STRIKE)){
+			// strike in last frame not add new pins. Add only bonuses
+				rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+			}
+			//else{
+				//rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+			//	rolls[rollNb][SCORE]+=rolls[rollNb][PINS];
+			//}
+			if ((rollInFrame == THIRD_ROLL)&&(rolls[(rollNb-1)][BONUS]==SPARE)){
+
+				rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+			}
+			if ((rollInFrame == THIRD_ROLL)&&(rolls[(rollNb-2)][BONUS]==STRIKE)){
+
+				rolls[rollNb][SCORE]=rolls[rollNb-1][SCORE];
+			}
+
+
+		}	
 	}
 
 	private void addBonuses(){ 
@@ -104,28 +137,31 @@ public class BowlingGame implements Bowling {
 			return;
 		} // if first roll there isn't bonuses
 		if ((rolls[(rollNb-1)][BONUS]==STRIKE)){
-//			if (((FrameNb)!=MAXFRAME)||(rollInFrame!=3)){
-			rolls[rollNb][SCORE]+=(rolls[rollNb][PINS]);//rolls[rollNb-2][SCORE]+pins2;
-//			}
+
+			rolls[rollNb][SCORE]+=(rolls[rollNb][PINS]);
+
 		}		
 		// if STRIKE in n-2 [second bonus] 
 		if ((rolls[(rollNb-2)][BONUS]==STRIKE)){
-			rolls[rollNb][SCORE]+=(rolls[rollNb][PINS]);//+rolls[rollNb-1][PINS]);
-//			//gameScore[FrameNb]+=pins;
+			rolls[rollNb][SCORE]+=(rolls[rollNb][PINS]);
+
 		}
 
 
 		if ((rolls[rollNb-1][BONUS]==SPARE)&&((rollNb-1)>0)){
+
 			rolls[rollNb][SCORE]+=rolls[rollNb][PINS];
-			//gameScore[FrameNb]+=pins;
+
 		}
 		}
 	
 	
 	private void validation(int pins) {
 		try{
-		comments=""; //
+			//comments=""; 
 			prevalidation(pins);
+			if(!isOkPrevalidation(pins))
+			throw new IllegalArgumentException();
 			
 		}
 		catch (IllegalArgumentException e){
@@ -133,15 +169,18 @@ public class BowlingGame implements Bowling {
 			throw new IllegalArgumentException(comments);// 
 		}
 	}
-
+	
 	public boolean isOkPrevalidation(int pins){
-		comments="Prevalidation OK"; //
-		prevalidation(pins);
-		if(comments.equals("Prevalidation OK")){
-		return true;
+		comments="PrevalidationOK"; //
+		prevalidation(pins); // prevalidation() is changing commnets when is validation problem
+		
+		if(comments.equals("PrevalidationOK")){
+			return true;
 		}
-		return false;
-		// or return comments.equals("Prevalidation OK") // return boolean
+		else{
+			return false;
+		}
+		//return comments.equals("PrevalidationOK"); // return boolean, true when not changing in comments
 	}
 	
 		private void prevalidation(int pins) {
@@ -151,28 +190,25 @@ public class BowlingGame implements Bowling {
 			// except STRIKE in last frame (FrameNb==MAXFRAME)
 			validationSecoundRollPinsInFrame(pins); // first + second roll in frame must be in <0,..,ROLL_MAXSCOPE-first_roll> except strike		
 		}
+
 		if ((rollInFrame==SECOND_ROLL)&&(FrameNb>=MAXFRAME)){ // // when started third roll in frame/round; Last round and extra roll  
 			validationExtraRollInLastFrame(pins); // 
 			validationTwoRollPinsInLastFrame(pins);
 		}
 		
-		if ((rollInFrame>=SECOND_ROLL)&&(FrameNb>=MAXFRAME)){ // when started third roll in frame/round; Last round and extra roll  
+		if ((rollInFrame>=SECOND_ROLL)||(FrameNb>=MAXFRAME)){ // when started third roll in frame/round; Last round and extra roll  
 			validationRollAfterGameOver(pins);
 		}
 	}
 	
 //	(rolls[rollNb][PINS]==ROLL_MAXSCOPE)&&(rolls[rollNb-1][BONUS]==STRIKE)
 	private void validationRollOutOfScope(int pins2) {
-		//try{ 
+
 			if ((pins2<0)||(pins2>ROLL_MAXSCOPE)){ // Exception when pins in first roll in frame/round is out of <0,...,10>
 				comments="Pins must be from 0 to 10";
-				throw new IllegalArgumentException(comments);//Exception() "Pins must be from 0 to 10");
-			}	
-		//}
-		//catch (IllegalArgumentException e){
 
-		//throw new IllegalArgumentException("Pins must be from 0 to 10");// 
-		//}
+			}	
+
 	}
 	
 	private void validationSecoundRollPinsInFrame(int pins2) {
@@ -180,7 +216,7 @@ public class BowlingGame implements Bowling {
 			
 			if ((rolls[rollNb][PINS]+pins2>ROLL_MAXSCOPE)&&(rolls[rollNb][PINS]!=ROLL_MAXSCOPE)){ // Second roll in frame/round; Exception when pins in second roll is bigger than "10-pins_in_first_roll".
 				comments="Sum of pins must be from 0 to 10 in two rolls in one frame/round .";
-				throw new IllegalArgumentException(comments);//("BowlingGame: void roll(int pins). Sum of pins in two rolls must be from 0 to 10 -> outside the field of input data.\n");
+				//throw new IllegalArgumentException(comments);//("BowlingGame: void roll(int pins). Sum of pins in two rolls must be from 0 to 10 -> outside the field of input data.\n");
 			}
 		//}
 		//catch (IllegalArgumentException e){
@@ -199,7 +235,7 @@ public class BowlingGame implements Bowling {
 			}	
 			else{
 				comments="There is no ekstra roll (third) in last frame/round!!!";
-				throw new IllegalArgumentException(comments);
+				//throw new IllegalArgumentException(comments);
 			}
 			
 		//}		
@@ -211,44 +247,37 @@ public class BowlingGame implements Bowling {
 	
 	private void validationTwoRollPinsInLastFrame(int pins2) {
 	
-		//try{ 
-			// Last Frame: if (roll in second roll in last frame != ROLL_MAXSCOPE) sum second and third must be <= ROLL_MAXSCOPE
+
 			if (rolls[rollNb-1][PINS]==ROLL_MAXSCOPE){ // when STRIKE in FIRST
 				if ((rolls[rollNb][PINS]!=ROLL_MAXSCOPE)&&((rolls[rollNb][PINS]+pins2)>ROLL_MAXSCOPE)) {
 					comments="In last frame/round sum of pins in two last rolls (second and third) must be from 0 to 10 except STRIKE in second roll \n";					
-					throw new IllegalArgumentException(comments);
+
 					}
 			}
-		//}		
-		//catch (IllegalArgumentException e){
 
-		//throw new IllegalArgumentException("In last frame/round sum of pins in two last rolls (second and third) must be from 0 to 10 except STRIKE in second roll \n");// 
-		//}
 		
 }
 
 private void validationRollAfterGameOver(int pins2) {
 	// after the end of the game
-	//try{ 
-		// if no STRIKE (in first roll) or SPARE in last frame => no extra roll
-		if ((FrameNb>=MAXFRAME)&&(rollInFrame>=SECOND_ROLL)){ //never woul be rollInFrame>3 in last frame
-			if (((rolls[rollNb-1][PINS]+rolls[rollNb][PINS])==ROLL_MAXSCOPE)||(rolls[rollNb-1][PINS]==ROLL_MAXSCOPE)){
-			// do nothing			
-			} 				
-			else{
-				comments="Roll after the end of the game!!!";
-				throw new IllegalArgumentException(comments);//"When no STRIKE or SPARE there is no ekstra roll (third) in last frame/round!!!");
-			}
+
+//		if ((FrameNb==(MAXFRAME-1))){//&&(rollInFrame>THIRD_ROLL)){ //never woul be rollInFrame>3 in last frame
+			if((rollInFrame >= THIRD_ROLL)){
+					comments="Roll after the end of the game!!!";
+				}
+			if((rollInFrame == SECOND_ROLL)){// if no STRIKE (in first roll) or SPARE in last frame => no extra roll
+//			if (((rolls[rollNb-1][PINS]+rolls[rollNb][PINS])==ROLL_MAXSCOPE)||(rolls[rollNb-1][PINS]==ROLL_MAXSCOPE)){
+				if (rolls[rollNb-1][PINS]!=ROLL_MAXSCOPE){
+//					comments="Roll after the end of the game!!!";
+					}
+				}	
+
+//			}
 				
-		}
+		}// validationRollAfterGameOver
 		
-	//}		
-	//catch (IllegalArgumentException e){
 	
-	//	throw new IllegalArgumentException("Roll after the end of the game!!!");
-	
-	//}
-}
+//}
 
 
 

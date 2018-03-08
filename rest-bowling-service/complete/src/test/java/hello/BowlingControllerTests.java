@@ -116,12 +116,12 @@ public class BowlingControllerTests {
 			.andExpect(jsonPath("$.playerId").value(1))
 			.andExpect(jsonPath("$.score").value(24));
 	}
-@Test // Adding pins to the game
+	@Test // Adding pins to the game
     public void testAddPinsToGameErrors() throws Exception {
 		// Id in Patch != Id in body
         this.mockMvc.perform(put("/bowling/games/2")
 				.contentType(MediaType.APPLICATION_JSON) //
-				.content(createDataInJson (1,3))) 
+				.content(createDataInJson (1,1))) 
 			.andDo(print())
 			.andExpect(status().is(300));
 		// ID out of scope
@@ -129,18 +129,16 @@ public class BowlingControllerTests {
 				.contentType(MediaType.APPLICATION_JSON) //
 				.content(createDataInJson (10,7))) // end perform()
 			.andDo(print())
-			.andExpect(status().is(406)); //.isOk()??
+			.andExpect(status().is(404)); //NOT_FUND
 
-/*
+
    		this.mockMvc.perform(put("/bowling/games/1")
 				.contentType(MediaType.APPLICATION_JSON) //
-				.content(createDataInJson (1,7))) // end perform()
+				.content(createDataInJson (1,11))) // end perform()
 			.andDo(print())
-			.andExpect(status().is(202)) //.isOk()??
-            .andExpect(jsonPath("$.name").value("NoName"))//;
-			.andExpect(jsonPath("$.playerId").value(1))
-			.andExpect(jsonPath("$.score").value(24));
-*/
+			.andExpect(status().is(403)); //FORBIDDEN
+
+
 	}
 
 	@Test // Delete games

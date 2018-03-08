@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @Component("bowlingInputForm") 
 public class BowlingInputForm{
 	@NotNull
-	@Size(min=1,max=21) // 21 - Max rolls in frame 	
+	@Size(min=1,max=11) // 21 - Max rolls in frame 	
     private int playerId;
 	@NotNull
-	@Size(min=0,max=10)	
+	//@Size(min=0,max=10)	
 	private int pins;
   
 	public int getPlayerId() {

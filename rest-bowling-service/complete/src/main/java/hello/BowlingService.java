@@ -36,11 +36,11 @@ public class BowlingService {
 		
     }
     
-	public BowlingService(int playerId, String name) {
+//	public BowlingService(int playerId, String name) {
 		//this.super();
- 		this.names[playerId] = name;
+// 		this.names[playerId] = name;
 
-    }
+//    }
 
    
 	public int getGameCounter() {
@@ -88,7 +88,7 @@ public class BowlingService {
 		}
 	}
 
-	public BowlingOutputForm getBowlingOutputFormData(int playerId){
+	public BowlingOutputForm getBowlingOutputFormData(int playerId){ //for RESTController GET, POST
 		BowlingOutputForm bowlingOutputData= new BowlingOutputForm();
 		bowlingOutputData.setPlayerId(playerId);
 		bowlingOutputData.setName(names[playerId]);
@@ -100,13 +100,14 @@ public class BowlingService {
 		bowlingOutputData.setComments(gameBase[playerId].getComments()); 	
 		return bowlingOutputData;	
 	}
-	public BowlingOutputForm getBowlingOutputFormData(BowlingInputForm input){
+	public BowlingOutputForm getBowlingOutputFormData(BowlingInputForm input){	//for PUT
 		BowlingOutputForm bowlingOutputData= getBowlingOutputFormData(input.getPlayerId());
 		bowlingOutputData.setAddedPins(input.getPins());
 		return bowlingOutputData;	
 	}
 	public boolean isOkPrevalidation(BowlingInputForm inputRest){
-		return gameBase[inputRest.getPlayerId()].isOkPrevalidation(inputRest.getPlayerId());
+		//return false;
+		return gameBase[inputRest.getPlayerId()].isOkPrevalidation(inputRest.getPins());
 
 	}
 

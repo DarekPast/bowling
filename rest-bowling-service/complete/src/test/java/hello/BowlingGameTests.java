@@ -37,7 +37,8 @@ static int MAX = 21;
 	private Bowling bowlingUnderTest;	
 	int [] referenceData,dataFromBowlingGame;
 
-	@Before public void initializeBowlingGameTests() {
+	@Before 
+	public void initializeBowlingGameTests() {
 	bowlingUnderTest = new BowlingGame();
 	referenceData = new int[MAX];;
   	dataFromBowlingGame = new int[MAX];	
@@ -48,7 +49,8 @@ static int MAX = 21;
 	}
 	
 	
-	@Test public void noBonusesTestAfterSomeRolls() {
+	@Test 
+	public void noBonusesTestAfterSomeRolls() {
 
 		int noBonusPins=4; // less that 5
 		int someRolls=20;	//max 20 (without extra roll)
@@ -63,7 +65,8 @@ static int MAX = 21;
 	
   } // public void noBonusesTestAfterSomeRolls
 	
-	@Test public void perfectGameScores300() {
+	@Test 
+	public void perfectGameScores300() {
 		// Perfect Game 12 x STRIKE
   	//bowlingUnderTest = new BowlingGame();
   	int [] patternData = new int[PERFECTGAME];
@@ -93,12 +96,11 @@ static int MAX = 21;
       	
   	}
   	
- 	
   	assertArrayEquals("Perfect Game Error",referenceData, dataFromBowlingGame);
 	}
 	
-	@Test public void perfectGameSpare190() {
-		//bowlingUnderTest = new BowlingGame();
+	@Test 
+	public void perfectGameSpare190() {
   	int [] patternData = new int[MAX];
   	int somePerfectSpares=MAX; // change it if error
   	//the pattern of MAX SPARE bowling game
@@ -123,6 +125,7 @@ static int MAX = 21;
   	patternData[18]=180;
   	patternData[19]=181;
   	patternData[20]=190;
+//the pattern of MAX SPARE bowling game
   	
   	for (int i=0;i<somePerfectSpares;i++){
   		bowlingUnderTest.roll(9);
@@ -136,7 +139,7 @@ static int MAX = 21;
   		}
   	
   	}//(int i=0;i<MAX+1;i++
-//the pattern of MAX SPARE bowling game
+
 
   	
   	assertArrayEquals(referenceData, dataFromBowlingGame);
