@@ -2,18 +2,15 @@ package hello;
 
 import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.Entity;
-//@Entity
 
-//@Table(name = "bowlingOutputForm")
 // Data schema for REST output
 @Component("bowlingOutputForm") 
 public class BowlingOutputForm{
-	//@NotNull    
+	@NotNull    
 	private int playerId;
 	private String name; 
 	private int addedPins;
-	//@NotNull    
+	@NotNull    
 	private int score;
 	private int rollNb;
 	private int frameNb;

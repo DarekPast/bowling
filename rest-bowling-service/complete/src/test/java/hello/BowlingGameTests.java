@@ -1,39 +1,52 @@
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Unit Tests
+ * Class testing BowlingGame.java with JUnit
+ * 
+*/
+
 package hello;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+//import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+//import org.springframework.test.web.servlet.MockMvc;
 import hello.*;
 
-// 03.05
+
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.junit.Test;
+//import org.springframework.context.ApplicationContext;
+//import org.springframework.context.support.ClassPathXmlApplicationContext;
+//import org.springframework.beans.factory.annotation.Autowired;
 
 
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest
-//@AutoConfigureMockMvc
+
 public class BowlingGameTests {
 static int MAX = 21;
 	static int PERFECTGAME = 12;
-//	private ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("annotatedcontext.xml");
-	//private Bowling bowlingUnderTest = context.getBean(BowlingGame.class); //correct
-	//private Bowling bowlingUnderTest= (Bowling) context.getBean("bowlingGame"); //correct
-	//private Bowling bowlingUnderTest = context.getBean("BowlingGame"); //wrong
 	private Bowling bowlingUnderTest;	
 	int [] referenceData,dataFromBowlingGame;
 
@@ -234,15 +247,5 @@ static int MAX = 21;
 	
   } // public void spareHasBonusPointsFromNextRoll()
 	
-	//@Test 
-	public void erroorInValidation() {
-	//test generate my error 
-		int noBonusPins=6; // less that 5
-		int someRolls=20;	//max 20 (without extra roll)
-		
-  		for (int i=0;i<someRolls;i++){
-  			bowlingUnderTest.roll(noBonusPins);
-  			dataFromBowlingGame[i]=bowlingUnderTest.calculateScore();
-  		}
-	}
+
 }

@@ -9,6 +9,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.PathSelectors.regex;
+import springfox.documentation.builders.ApiInfoBuilder;
  
 @Configuration
 @EnableSwagger2
@@ -26,16 +27,17 @@ public class SwaggerConfig {
 //	;    
 	}
     private ApiInfo infoData() {
-        ApiInfo apiInfo = new ApiInfo(
-                "Spring Boot REST API",
-                "Spring Boot REST API for Bowling Game",
-                "0.1",
-                "Terms of service",
-				"Darek Past; tel. 503 xxx xxx ; dar.past@wp.pl",
-//                (String) new Contact("Darek Past", "https://springframework.guru/about/", "dark.past@wp.pl"),
-               "Apache License Version 2.0",
-                "https://www.apache.org/licenses/LICENSE-2.0");
-        return apiInfo;
+	return new ApiInfoBuilder()
+                .title("REST Bowling Game")
+                .description("REST Bowling Game Service with Swagger")
+                .contact(new Contact("Darek Pastuszka",
+                                     "http://nowweb.pl",
+                                     "dark.past@wp.pl"))
+                .license("License (apache)")
+                .licenseUrl("Uhttp://www.apache.org/licenses/LICENSE-2.0")
+                .version("0.0.1")
+                .build();
+
     }
 
 }

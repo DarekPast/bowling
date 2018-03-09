@@ -1,17 +1,11 @@
 package hello;
 
-import org.springframework.stereotype.Component;
+//import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-//import io.swagger.annotations.ApiModelProperty;
-//import javax.persistence.*;
+//import org.springframework.context.ApplicationContext;
 import hello.BowlingGame;
 
 
-//@Entity
 @Service("games") 
 //@Component("bowlingService") 
 public class BowlingService {
@@ -23,25 +17,18 @@ public class BowlingService {
 	static int NOT_ERROR =0;
 
     private int gameCounter;  // int or long?playerId,
-    //The taable of name players"
+    //The taable of players name"
 	private String names[] = new String[MAX_GAME_BASE];
 	//"The base of all games"
 	private BowlingGame gameBase[] = new BowlingGame[MAX_GAME_BASE];
 
-	//
 	public BowlingService() {
        	gameCounter =0;
-		names[0] = "No any Name";
-		gameBase[0] = null;//new BowlingGame();
+		names[0] = "No any Name"; // in table pozytion "0" is newer used but set
+		gameBase[0] = null;// in table pozytion "0" is newer used
 		
     }
     
-//	public BowlingService(int playerId, String name) {
-		//this.super();
-// 		this.names[playerId] = name;
-
-//    }
-
    
 	public int getGameCounter() {
         return gameCounter;
@@ -57,9 +44,6 @@ public class BowlingService {
 	public BowlingGame[] getBowlingGame(){
     	return gameBase;
 	}	
-//	public BowlingGame getBowlingGame(int playerId){
-//    	return gameBase[playerId];
-//	}
 
 	public void addPins(BowlingInputForm bowlingInputData) {
 		gameBase[bowlingInputData.getPlayerId()].roll(bowlingInputData.getPins());		
@@ -78,7 +62,6 @@ public class BowlingService {
 	}
 	
 	public int delete(int playerId) {
-	// ??? Exceptions?
 		if ((playerId<=gameCounter)&&(playerId > 0)){
 			gameBase[playerId]=null;
 			return NOT_ERROR; //       
@@ -105,13 +88,8 @@ public class BowlingService {
 		bowlingOutputData.setAddedPins(input.getPins());
 		return bowlingOutputData;	
 	}
-	public boolean isOkPrevalidation(BowlingInputForm inputRest){
-		//return false;
+	public boolean isOkPrevalidation(BowlingInputForm inputRest){ // prevalidation for "pins" from input
 		return gameBase[inputRest.getPlayerId()].isOkPrevalidation(inputRest.getPins());
-
 	}
-
-
-
 
 }
